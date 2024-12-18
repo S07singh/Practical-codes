@@ -1,61 +1,118 @@
 #include <iostream>
-using namespace std;
 #include <string>
+using namespace std;
 
-class Publication {
+// Base class: publication
+class publication {
 protected:
     string title;
     float price;
-public:
-    Publication() : title(""), price(0.0) {}
 
+public:
+    // Default constructor
+    publication() : title(""), price(0.0) {}
+
+    // Virtual functions for data input and output
     virtual void getdata() {
-        cout << "Enter title: ";
-        cin.ignore();
-        getline(cin, title);
-        cout << "Enter price: ";
-        cin >> price;
+        try {
+            cout << "Enter title: ";
+            cin.ignore(); // To handle leftover newline character
+            getline(cin, title);
+            
+            cout << "Enter price: ";
+            cin >> price;
+            if (price < 0) {
+                throw invalid_argument("Price cannot be negative.");
+            }
+        } catch (exception &e) {
+            cout << "Exception: " << e.what() << endl;
+            reset();
+        }
     }
 
     virtual void putdata() const {
-        cout << "Title: " << title <<endl;
-        cout << "Price: Rs " << price << endl;
+        cout << "Title: " << title << endl;
+        cout << "Price: $" << price << endl;
+    }
+
+    // Reset function to set all members to zero/default values
+    virtual void reset() {
+        title = "";
+        price = 0.0;
     }
 };
 
-class Book : public Publication {
+// Derived class: book
+class book : public publication {
 private:
     int page_count;
-public:
-    Book() : Publication(), page_count(0) {}
 
+public:
+    // Default constructor
+    book() : publication(), page_count(0) {}
+
+    // Override getdata()
     void getdata() override {
-        Publication::getdata();
-        cout << "Enter page count: ";
-        cin >> page_count;
+        try {
+            publication::getdata(); // Call base class getdata
+            cout << "Enter page count: ";
+            cin >> page_count;
+            if (page_count < 0) {
+                throw invalid_argument("Page count cannot be negative.");
+            }
+        } catch (exception &e) {
+            cout << "Exception: " << e.what() << endl;
+            reset();
+        }
     }
 
+    // Override putdata()
     void putdata() const override {
-        Publication::putdata();
-        cout << "Page Count: " << page_count <<endl;
+        publication::putdata(); // Call base class putdata
+        cout << "Page Count: " << page_count << endl;
+    }
+
+    // Override reset
+    void reset() override {
+        publication::reset(); // Reset base class members
+        page_count = 0;
     }
 };
 
-class Tape : public Publication {
+// Derived class: tape
+class tape : public publication {
 private:
-    float playing_time;
-public:
-    Tape() : Publication(), playing_time(0.0) {}
+    float play_time;
 
+public:
+    // Default constructor
+    tape() : publication(), play_time(0.0) {}
+
+    // Override getdata()
     void getdata() override {
-        Publication::getdata();
-        cout << "Enter playing time in minutes: ";
-        cin >> playing_time;
+        try {
+            publication::getdata(); // Call base class getdata
+            cout << "Enter playing time (in minutes): ";
+            cin >> play_time;
+            if (play_time < 0) {
+                throw invalid_argument("Playing time cannot be negative.");
+            }
+        } catch (exception &e) {
+            cout << "Exception: " << e.what() << endl;
+            reset();
+        }
     }
 
+    // Override putdata()
     void putdata() const override {
-        Publication::putdata();
-    cout << "Playing Time: " << playing_time << " minutes" <<endl;
+        publication::putdata(); // Call base class putdata
+        cout << "Playing Time: " << play_time << " minutes" << endl;
+    }
+
+    // Override reset
+    void reset() override {
+        publication::reset(); // Reset base class members
+        play_time = 0.0;
     }
 };
 
@@ -66,12 +123,12 @@ int main() {
         cin >> choice;
 
         if (choice == 'b' || choice == 'B') {
-            Book book;
+            book book;
             book.getdata();
             cout << "\nData for the book:" <<endl;
             book.putdata();
         } else if (choice == 't' || choice == 'T') {
-            Tape tape;
+            tape tape;
             tape.getdata();
             cout << "\nData for the tape:" <<endl;
             tape.putdata();
