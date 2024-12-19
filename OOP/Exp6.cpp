@@ -2,176 +2,129 @@
 // records such as Item records (Item code, name, cost, quantity, etc.) 
 // using vector container.
 
-
-#include <iostream>
-#include <algorithm>
-#include <vector>
+#include<iostream>
+#include<algorithm>
+#include<vector>
 using namespace std;
 
 class Item {
 public:
-    char name[10];
-    int quantity;
-    int cost;
     int code;
-    
-    bool operator==(const Item& i1) const {
-        return code == i1.code;
+    string name;
+    float cost;
+    int quantity;
+
+    // Default constructor
+    Item() : code(0), name(""), cost(0.0), quantity(0) {}
+
+    // Method to input data
+    void getData() {
+        cout << "Enter code: ";
+        cin >> code;
+        cin.ignore();  // To consume the newline character left in the buffer
+        cout << "Enter name: ";
+        getline(cin, name);
+        cout << "Enter cost: ";
+        cin >> cost;
+        cout << "Enter quantity: ";
+        cin >> quantity;
     }
 
-    bool operator<(const Item& i1) const {
-        return code < i1.code;
+    // Method to display item details
+    void display() const {
+        cout << "Code: " << code
+             << ", Name: " << name
+             << ", Cost: " << cost
+             << ", Quantity: " << quantity << endl;
     }
 };
 
-vector<Item> o1;
+// Function to display all items in the vector
+void displayItems(const vector<Item>& items) {
+    for (const auto& item : items) {
+        item.display();
+    }
+}
 
-void print(const Item &i1);
-void display();
-void insert();
-void search();
-void dlt();
-bool compare(const Item &i1, const Item &i2) {
-    return i1.cost < i2.cost;
+// Comparison function to sort by item code
+bool compareByCode(const Item& item1, const Item& item2) {
+    return item1.code < item2.code;
+}
+
+// Comparison function to sort by item cost
+bool compareByCost(const Item& item1, const Item& item2) {
+    return item1.cost < item2.cost;
+}
+
+// Function to sort items by code
+void sortItemsByCode(vector<Item>& items) {
+    sort(items.begin(), items.end(), compareByCode);
+}
+
+// Function to sort items by cost
+void sortItemsByCost(vector<Item>& items) {
+    sort(items.begin(), items.end(), compareByCost);
+}
+
+// Function to search for an item by code
+Item* search(vector<Item>& items, int code) {
+    for (auto& item : items) {
+        if (item.code == code) {
+            return &item;
+        }
+    }
+    return nullptr;
 }
 
 int main() {
-    int ch;
-    do {
-        cout << "\n*** Menu ***";
-        cout << "\n1. Insert";
-        cout << "\n2. Display";
-        cout << "\n3. Search";
-        cout << "\n4. Sort";
-        cout << "\n5. Delete";
-        cout << "\n6. Exit";
-        cout << "\nEnter your choice: ";
-        cin >> ch;
-        switch(ch) {
-            case 1: insert(); break;
-            case 2: display(); break;
-            case 3: search(); break;
-            case 4: sort(o1.begin(), o1.end(), compare);
-                    cout << "\n\nSorted on Cost";
-                    display(); break;
-            case 5: dlt(); break;
-            case 6: exit(0);
-        }
-    } while(ch != 7);
+    vector<Item> items;
+    int n;
+
+    // Get the number of items to store
+    cout << "Enter the number of items to store: ";
+    cin >> n;
+
+    // Input item data
+    for (int i = 0; i < n; i++) {
+        cout << "\nEnter details for item " << i + 1 << ":\n";
+        Item item;
+        item.getData();
+        items.push_back(item);
+    }
+
+    // Display all entered items
+    cout << "Items entered: " << endl;
+    displayItems(items);
+
+    // Search for an item by code
+    int searchCode;
+    cout << "\nEnter the code of the item to search for: ";
+    cin >> searchCode;
+
+    Item* foundItem = search(items, searchCode);
+    if (foundItem) {
+        cout << "\nItem found:\n";
+        foundItem->display();
+    } else {
+        cout << "\nItem with code " << searchCode << " not found.\n";
+    }
+
+    // Choose sorting option
+    int choice;
+    cout << "\nChoose sorting option:\n1. Sort by Code\n2. Sort by Cost\nEnter your choice: ";
+    cin >> choice;
+
+    if (choice == 1) {
+        sortItemsByCode(items);  // Sort by code
+        cout << "\nItems sorted by Code:\n";
+        displayItems(items);
+    } else if (choice == 2) {
+        sortItemsByCost(items);  // Sort by cost
+        cout << "\nItems sorted by Cost:\n";
+        displayItems(items);
+    } else {
+        cout << "\nInvalid choice. No sorting performed.\n";
+    }
+
     return 0;
 }
-
-void insert() {
-    Item i1;
-    cout << "\nEnter Item Name: ";
-    cin >> i1.name;
-    cout << "\nEnter Item Quantity: ";
-    cin >> i1.quantity;
-    cout << "\nEnter Item Cost: ";
-    cin >> i1.cost;
-    cout << "\nEnter Item Code: ";
-    cin >> i1.code;
-    o1.push_back(i1);
-}
-
-void display() {
-    for_each(o1.begin(), o1.end(), print);
-}
-
-void print(const Item &i1) {
-    cout << "\nItem Name: " << i1.name;
-    cout << "\nItem Quantity: " << i1.quantity;
-    cout << "\nItem Cost: " << i1.cost;
-    cout << "\nItem Code: " << i1.code;
-}
-
-void search() {
-    vector<Item>::iterator p;
-    Item i1;
-    cout << "\nEnter Item Code to search: ";
-    cin >> i1.code;
-    p = find(o1.begin(), o1.end(), i1);
-    if(p == o1.end()) {
-        cout << "\nNot found.";
-    } else {
-        cout << "\nFound." << endl;
-        cout << "Item Name: " << p->name << endl;
-        cout << "Item Quantity: " << p->quantity << endl;
-        cout << "Item Cost: " << p->cost << endl;
-        cout << "Item Code: " << p->code << endl;
-    }
-}
-
-void dlt() {
-    vector<Item>::iterator p;
-    Item i1;
-    cout << "\nEnter Item Code to delete: ";
-    cin >> i1.code;
-    p = find(o1.begin(), o1.end(), i1);
-    if(p == o1.end()) {
-        cout << "\nNot found.";
-    } else {
-        o1.erase(p);
-        cout << "\nDeleted.";
-    }
-}
-
-/* Required Input Format:
-
-Input
-Menu Options:
-
-Insert
-Display
-Search
-Sort
-Delete
-Exit
-User Inputs:
-
-Insert Item
-
-Menu Selection: 1
-Enter Item Name: Pen
-Enter Item Quantity: 50
-Enter Item Cost: 10
-Enter Item Code: 101
-Insert Another Item
-
-Menu Selection: 1
-Enter Item Name: Notebook
-Enter Item Quantity: 30
-Enter Item Cost: 25
-Enter Item Code: 102
-Insert Another Item
-
-Menu Selection: 1
-Enter Item Name: Eraser
-Enter Item Quantity: 100
-Enter Item Cost: 5
-Enter Item Code: 103
-Display All Items
-
-Menu Selection: 2
-Search for an Item
-
-Menu Selection: 3
-Enter Item Code to search: 102
-Sort Items by Cost
-
-Menu Selection: 4
-Display All Items Again
-
-Menu Selection: 2
-Delete an Item
-
-Menu Selection: 5
-Enter Item Code to delete: 101
-Display All Items Again
-
-Menu Selection: 2
-Exit the Program
-
-Menu Selection: 6
-
-*/
