@@ -29,3 +29,21 @@ void loop() {
     Serial.println("Enter a number:");
   }
 }
+
+// int n; 
+// void setup() { 
+// Serial.begin(9600); 
+// Serial.print("\nEnter the number:"); 
+// } 
+// void loop() { 
+// if (Serial.available() > 0) { 
+// String input = Serial.readStringUntil('\n'); 
+// n = input.toInt(); 
+// Serial.print("\nThe square of "); 
+// Serial.print(n); 
+// Serial.print(" is : "); 
+// Serial.print(n * n); 
+// delay(500); 
+// Serial.print("\nEnter the number:"); 
+// } 
+// } 
