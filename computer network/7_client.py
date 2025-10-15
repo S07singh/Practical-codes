@@ -13,7 +13,9 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 # Files to send
 files_to_send = {
     "text": "file.txt",
-    "video": "video.mp4"
+    "video": "video.mp4",
+    "audio": "audio.mp3",
+    "script": "script.py"
 }
 
 for label, file_path in files_to_send.items():
