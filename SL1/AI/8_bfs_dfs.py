@@ -63,3 +63,12 @@ else:
         if cont != 'y':
             print("Exiting program. Goodbye!")
             break
+
+# Enter number of edges: 6
+# Edge (u v): A B
+# Edge (u v): A C
+# Edge (u v): B D
+# Edge (u v): B E
+# Edge (u v): C F
+# Edge (u v): E F
+# Enter start vertex: A
